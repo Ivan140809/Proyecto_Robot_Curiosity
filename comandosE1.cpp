@@ -1,0 +1,183 @@
+#include "comandosE1.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+using namespace std;
+
+static ListaComandos  listaComandos;
+static ListaElementos listaElementos;
+
+void cargar_comandos(const string& nombreArchivo) {
+    ifstream archivo(nombreArchivo);
+    if (!archivo.is_open()) {
+        cout<<"Error con el archivo"<<endl;
+    }
+
+    listaComandos = ListaComandos();
+
+  string linea;
+    int cargados = 0;
+     while (getline(archivo, linea)) {
+     istringstream palabra(linea);
+
+        string token;
+
+        palabra >> token;
+  if (token == "avanzar" || token == "girar") {
+            string magnStr, unidad;
+
+          palabra >> magnStr >> unidad;
+
+            double magnitud = strtod(magnStr.c_str(), nullptr);
+
+            listaComandos.agregarMovimiento(ComandoMovimiento(token, magnitud, unidad));
+
+            cargados++;
+	} else if(token == "fotografiar" || token == "composicion" || token == "perforar") {
+	// esta parte del codigo fue asistida por CLAUDE AI para lograr quitar las comillas del comentario y los espacios iniciales
+	 string objeto, comentario;
+            iss >> objeto;
+            getline(iss, comentario);
+	  size_t ini = comentario.find_first_not_of(" \t");
+            string comentario = (ini == string::npos) ? "" : comentario.substr(ini); 
+	 if (comentario.size() >= 2 && comentario.front() == '\'' && comentario.back() == '\'')
+                comentario = comentario.substr(1, comentario.size() - 2);
+	 // fin de la parte asistida
+            listaComandos.agregarAnalisis(ComandoAnalisis(token, objeto, comentario));
+	  cargados++;
+  }
+    }
+    archivo.close();
+ if (cargados == 0) {
+        cout << "Archivo vacio " << nombreArchivo
+             << " no contiene comandos." << endl;
+    } else {
+        cout << "Resultado exitoso " << cargados
+             << " comandos cargados correctamente desde "
+             << nombreArchivo << endl;
+    }
+}
+
+void agregar_movimiento(const string& tipo, double magnitud, const string& unidad) {
+    listaComandos.agregarMovimiento(ComandoMovimiento(tipo, magnitud, unidad));
+    cout << "El comando de movimiento ha sido agregado exitosamente." << endl;
+}
+
+void agregar_analisis(const string& tipo, const string& objeto, const string& comentario) {
+    string com = comentario;
+	//Funcion derivada de asistencia con IA especificamente de la asistencia de Claude AI
+    if (com.size() >= 2 && com.front() == '\'' && com.back() == '\'')
+        com = com.substr(1, com.size() - 2);
+	//Fin de asistencia
+    listaComandos.agregarAnalisis(ComandoAnalisis(tipo, objeto, com));
+    cout << "El comando de analisis ha sido agregado exitosamente." << endl;
+}
+
+void cargar_elementos(const string& nombreArchivo) {
+    ifstream archivo(nombreArchivo);
+    if (!archivo.is_open()) {
+        cout << "Error con el archivo"<<endl;
+    }
+ listaElementos = ListaElementos();
+
+    string linea;
+    int cargados = 0;
+
+    while (getline(archivo, linea)) {
+  istringstream palabra(linea);
+        string tipo, tamStr, unidad, xStr, yStr;
+      palabra >> tipo >> tamStr >> unidad >> xStr >> yStr;
+
+        double tam = strtod(tamStr.c_str(), nullptr);
+        double x   = strtod(xStr.c_str(),   nullptr);
+        double y   = strtod(yStr.c_str(),   nullptr);
+
+        listaElementos.agregar(ElementoInteres(tipo, tam, unidad, x, y));
+        cargados++;
+    }
+    archivo.close();
+
+if (cargados == 0) {
+        cout << "El archivo " << nombreArchivo << " no contiene elementos." << endl;
+    } else {
+        cout << cargados << " elementos cargados correctamente desde " << nombreArchivo << endl;
+    }
+}
+
+void agregar_elemento(const string& tipo, double tamano, const string& unidad,
+                          double coordX, double coordY) {
+    listaElementos.agregar(ElementoInteres(tipo, tamano, unidad, coordX, coordY));
+    cout << "El elemento ha sido agregado exitosamente." << endl;
+}
+
+void guardar(const string& tipoArchivo, const string& nombreArchivo) {
+
+    if (tipoArchivo == "comandos") {
+        if (listaComandos.obtenerLista().empty()) {
+            cout << "La informacion requerida no esta almacenada en memoria." << endl
+        }
+
+ 	ofstream archivo(nombreArchivo);
+        if (!archivo.is_open()) {
+            cout << "Error guardando en " << nombreArchivo << endl;
+        	}
+	list<OrganizadorComando>::iterator it;
+	for (it = listaComandos.obtenerLista().begin(); it != listaComandos.obtenerLista().end(); ++it) {
+            if (it->tipo == TIPO_MOVIMIENTO) {
+                archivo << it->movimiento.obtenerTipo()     << " "
+                        << it->movimiento.obtenerMagnitud() << " "
+                        << it->movimiento.obtenerUnidad()   << endl;
+ 	    } else {
+                archivo << it->analisis.obtenerTipo() << " " << it->analisis.obtenerObjeto();
+                if (!itCmd->analisis.obtenerComentario().empty())
+                    archivo << itCmd->analisis.obtenerComentario();
+                archivo << endl;
+            }
+        }
+        archivo.close();
+	cout << "La informacion ha sido guardada en"<< nombreArchivo << endl;
+   } else if (tipoArchivo == "elementos") {
+        if (listaElementos.obtenerLista().empty()) {
+            cout << "La informacion requerida no esta almacenada en memoria." << endl;
+        }
+	list<ElementoInteres>::iterator itElem;
+	  for (itElem = listaElementos.obtenerLista().begin(); itElem != listaElementos.obtenerLista().end(); ++itElem) {
+            Punto pos = itElem->obtenerPosicion();
+            archivo << itElem->obtenerTipo()   
+                    << itElem->obtenerTamano()  
+                    << itElem->obtenerUnidad()  
+                    << pos.obtenerX()           
+                    << pos.obtenerY()<< endl;
+        }
+ 	archivo.close();
+        cout << "La informacion ha sido guardada en " << nombreArchivo << endl;
+    }
+}
+
+void simular_comandos(double coordX, double coordY) {
+    if (listaComandos.obtenerLista().empty()) {
+        cout <<" La informacion requerida no esta almacenada en memoria." << endl;
+    }
+
+double x= coordX;
+    double y= coordY;
+    double angulo = 0.0; 
+list<OrganizadorComando>::iterator itS;
+for (itS = listaComandos.obtenerLista().begin(); itS != listaComandos.obtenerLista().end(); ++itS) {
+        if (itS->tipo == TIPO_MOVIMIENTO) {
+if (itS->movimiento.obtenerTipo() == "avanzar") {
+                x += itS->movimiento.aMetros() * cos(angulo);
+                y += itS->movimiento.aMetros() * sin(angulo);
+            } else {
+                angulo += itS->movimiento.aRadianes();
+            }
+ } else if (it->tipo == TIPO_ANALISIS) {
+          cout << "Ejecutando analisis: " << it->analisis.obtenerTipo()
+         << " sobre " << it->analisis.obtenerObjeto();
+    if (!it->analisis.obtenerComentario().empty())
+        cout << it->analisis.obtenerComentario() << endl;
+        }
+    }
+}
+}

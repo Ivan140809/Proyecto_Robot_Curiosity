@@ -17,7 +17,7 @@ void cargar_elementos(const string& nombreArchivo);
 //agregar_movimiento tipo magnitud unidad
 void agregar_movimiento(const string& tipo, double magnitud, const string& unidad);
 
-// agregar_analisis tipo objeto [comentario]
+// agregar_analisis tipo objeto comentario
 void agregar_analisis(const string& tipo, const string& objeto, const string& comentario);
 
 // agregar_elemento tipo tamano unidad coordX coordY
