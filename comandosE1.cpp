@@ -37,10 +37,10 @@ void cargar_comandos(const string& nombreArchivo) {
 	} else if(token == "fotografiar" || token == "composicion" || token == "perforar") {
 	// esta parte del codigo fue asistida por CLAUDE AI para lograr quitar las comillas del comentario y los espacios iniciales
 	 string objeto, comentario;
-            iss >> objeto;
-            getline(iss, comentario);
+            palabra >> objeto;
+            getline(palabra, comentario);
 	  size_t ini = comentario.find_first_not_of(" \t");
-            string comentario = (ini == string::npos) ? "" : comentario.substr(ini); 
+             comentario = (ini == string::npos) ? "" : comentario.substr(ini); 
 	 if (comentario.size() >= 2 && comentario.front() == '\'' && comentario.back() == '\'')
                 comentario = comentario.substr(1, comentario.size() - 2);
 	 // fin de la parte asistida
@@ -115,14 +115,14 @@ void guardar(const string& tipoArchivo, const string& nombreArchivo) {
 
     if (tipoArchivo == "comandos") {
         if (listaComandos.obtenerLista().empty()) {
-            cout << "La informacion requerida no esta almacenada en memoria." << endl
+            cout << "La informacion requerida no esta almacenada en memoria." << endl;
         }
 
  	ofstream archivo(nombreArchivo);
         if (!archivo.is_open()) {
             cout << "Error guardando en " << nombreArchivo << endl;
         	}
-	list<OrganizadorComando>::iterator it;
+	list<OrganizadorComandos>::const_iterator it;
 	for (it = listaComandos.obtenerLista().begin(); it != listaComandos.obtenerLista().end(); ++it) {
             if (it->tipo == TIPO_MOVIMIENTO) {
                 archivo << it->movimiento.obtenerTipo()     << " "
@@ -130,8 +130,8 @@ void guardar(const string& tipoArchivo, const string& nombreArchivo) {
                         << it->movimiento.obtenerUnidad()   << endl;
  	    } else {
                 archivo << it->analisis.obtenerTipo() << " " << it->analisis.obtenerObjeto();
-                if (!itCmd->analisis.obtenerComentario().empty())
-                    archivo << itCmd->analisis.obtenerComentario();
+                if (!it->analisis.obtenerComentario().empty())
+                    archivo << it->analisis.obtenerComentario();
                 archivo << endl;
             }
         }
@@ -141,7 +141,11 @@ void guardar(const string& tipoArchivo, const string& nombreArchivo) {
         if (listaElementos.obtenerLista().empty()) {
             cout << "La informacion requerida no esta almacenada en memoria." << endl;
         }
-	list<ElementoInteres>::iterator itElem;
+	ofstream archivo(nombreArchivo);
+	if(!archivo.is_open()){
+	 cout<<"error con el archivo de escritura"<<endl;
+	}
+	list<ElementoInteres>::const_iterator itElem;
 	  for (itElem = listaElementos.obtenerLista().begin(); itElem != listaElementos.obtenerLista().end(); ++itElem) {
             Punto pos = itElem->obtenerPosicion();
             archivo << itElem->obtenerTipo()   
@@ -163,7 +167,7 @@ void simular_comandos(double coordX, double coordY) {
 double x= coordX;
     double y= coordY;
     double angulo = 0.0; 
-list<OrganizadorComando>::iterator itS;
+list<OrganizadorComandos>::const_iterator itS;
 for (itS = listaComandos.obtenerLista().begin(); itS != listaComandos.obtenerLista().end(); ++itS) {
         if (itS->tipo == TIPO_MOVIMIENTO) {
 if (itS->movimiento.obtenerTipo() == "avanzar") {
@@ -172,12 +176,16 @@ if (itS->movimiento.obtenerTipo() == "avanzar") {
             } else {
                 angulo += itS->movimiento.aRadianes();
             }
- } else if (it->tipo == TIPO_ANALISIS) {
-          cout << "Ejecutando analisis: " << it->analisis.obtenerTipo()
-         << " sobre " << it->analisis.obtenerObjeto();
-    if (!it->analisis.obtenerComentario().empty())
-        cout << it->analisis.obtenerComentario() << endl;
+ } else if (itS->tipo == TIPO_ANALISIS) {
+          cout << "Ejecutando analisis " << itS->analisis.obtenerTipo()
+         << " sobre " << itS->analisis.obtenerObjeto();
+    if (!itS->analisis.obtenerComentario().empty())
+        cout << itS->analisis.obtenerComentario() << endl;
         }
     }
+ cout << "La simulacion de los comandos, a partir de la posicion ("
+         << coordX << "," << coordY << "), deja al robot en la nueva posicion ("
+         << x << "," << y << ")" << endl;
 }
-}
+
+

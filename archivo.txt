@@ -1,0 +1,10 @@
+avanzar 10 m
+girar 90 grd
+avanzar 5 m
+fotografiar roca 'formacion interesante'
+girar 45 grd
+avanzar 3 m
+composicion crater 'muestra de suelo'
+girar 180 grd
+avanzar 8 m
+perforar duna

@@ -24,4 +24,5 @@ void fijarY(double nuevoY);
 
     // Calcula la distancia euclidiana entre este punto y otro.
     double distanciaEuclidiana(const Punto& otro) const;
+};
 #endif

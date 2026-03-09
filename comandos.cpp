@@ -1,6 +1,7 @@
 #include "comandos.h"
 #include "ayuda.h"
 #include "valParam.h"
+#include "comandosE1.h"
 #include <iostream>
 #include <sstream>
 #include <iostream>
@@ -67,20 +68,7 @@ if (entrada != "ayuda" || argum.empty() || !extra.empty()) {
   cout<<"Comando invalido"<<endl;
   return false;
   }
-ifstream Archivo(archivo);
-
-    if (!Archivo) {   
-        cout << "Archivo erroneo "
-             << archivo
-             << " no se encuentra o no puede leerse."
-             << endl;
-        return false;
-    }
-
-    cout << "(Resultado exitoso) Archivo encontrado." << endl;
-
-cout <<  "Comando valido, Funcion proximamente a implementarse"<<endl;
-
+  cargar_comandos(archivo);
 return false;
 
 }
@@ -99,16 +87,7 @@ if (!validarParametros("cargar_elementos", params, cantidad) || entrada != "carg
 	cout << "Comando invalido" <<endl;
       return false;
 }
-ifstream Archivo(archivo);
-
-    if (!Archivo) {
-        cout << "Archivo erroneo, "
-             << archivo
-             << " no se encuentra o no puede leerse."
-             << endl;
-        return false;
-    }
-	cout << "Comando valido, Funcion proximamente a implementarse"<<endl;
+cargar_elementos(archivo);
 	return false;
 }
 //funcion agregar_movimiento
@@ -127,7 +106,8 @@ ifstream Archivo(archivo);
   if (entrada != "agregar_movimiento" || !extra.empty() || !validarParametros("agregar_movimiento", params, cantidad)) {
   return false;
   }
- cout << "Comando valido, Funcion proximamente a implementarse"<<endl;
+double magnitud = strtod(magn.c_str(), nullptr);
+agregar_movimiento(tipo, magnitud, unidad);
 return false;
 }
 //funcion agregar_analisis, corregir solo sirve con comentarios sin espacios.
@@ -147,7 +127,7 @@ if (linea.rfind("agregar_analisis", 0) == 0) {
 	if (entrada != "agregar_analisis" || !extra.empty() || !validarParametros("agregar_analisis", params, cantidad)) {
             return false;
         }
-	cout << "Comando valido, Funcion proximamente a implementarse"<<endl;
+	agregar_analisis(tipo, obj, comentario);
 	return false;
 }
 
@@ -169,7 +149,10 @@ if (linea.rfind("agregar_elemento", 0) == 0) {
 	if (entrada != "agregar_elemento" || !extra.empty() || !validarParametros("agregar_elemento", params, cantidad)) {
             return false;
         }
-	cout << "Comando valido, Funcion proximamente a implementarse"<<endl;
+double tamD = strtod(tam.c_str(), nullptr);
+double xD   = strtod(x.c_str(),   nullptr);
+double yD   = strtod(y.c_str(),   nullptr);
+	agregar_elemento(tipo, tamD, unidad, xD, yD);
         return false;
 }
 
@@ -241,14 +224,7 @@ if (comandoexacto(linea, "ubicar_elementos")) {
 	if (entrada != "guardar" || !extra.empty() || !validarParametros("guardar", params, cantidad)) {
             return false;
         }
-   ofstream Salida(archivo);
-
-    if (!Salida) {
-        cout << "error no se pudo crear o escribir en el archivo "<< archivo << endl;
-        return false;
-    }
-        cout << " Resultado exitoso Archivo listo para guardar." << endl;
- 	cout << "Comando valido, Funcion proximamente a implementarse"<<endl;
+        guardar(tipo, archivo);
         return false;
 }
 //funcion simular_comandos
@@ -266,7 +242,9 @@ if (linea.rfind("simular_comandos", 0) == 0) {
         if (entrada != "simular_comandos" || !extra.empty() || !validarParametros("simular_comandos", params, cantidad)) {
             return false;
         }
-	cout << "Comando valido, Funcion proximamente a implementarse"<<endl;
+double xD = strtod(x.c_str(), nullptr);
+double yD = strtod(y.c_str(), nullptr);
+	simular_comandos(xD, yD);
         return false;
 }
     cout << "Comando desconocido escribe 'ayuda' para ver la lista de comandos."<<endl;

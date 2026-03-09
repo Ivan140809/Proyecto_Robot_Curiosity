@@ -13,9 +13,6 @@ double Punto::obtenerY() const {
     return y;
 }
 
-double Punto::obtenerZ() const {
-    return z;
-}
 
 void Punto::fijarX(double nuevoX) {
     x = nuevoX;
@@ -25,14 +22,12 @@ void Punto::fijarY(double nuevoY) {
     y = nuevoY;
 }
 
-void Punto::fijarZ(double nuevoZ) {
-    z = nuevoZ;
-}
+
 double Punto::distanciaEuclidiana(const Punto& otro) const {
     double dx = otro.x - x;
     double dy = otro.y - y;
-    double dz = otro.z - z;
-    return sqrt(dx*dx + dy*dy + dz*dz);
+
+    return sqrt(dx*dx + dy*dy);
 }
 
 

@@ -30,7 +30,7 @@ private:
 public:
     void agregarMovimiento(const ComandoMovimiento& mov);
     void agregarAnalisis(const ComandoAnalisis& anal);
-    const list<NodoComando>& obtenerLista() const;
+    const list<OrganizadorComandos>& obtenerLista() const;
 };
 
 #endif
