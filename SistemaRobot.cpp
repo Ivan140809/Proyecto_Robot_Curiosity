@@ -1,4 +1,4 @@
-#include "comandosE1.h"
+#include "SistemaRobot.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -11,7 +11,8 @@ static ListaElementos listaElementos;
 void cargar_comandos(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
-        cout<<"Error con el archivo"<<endl;
+        cout << nombreArchivo << " no se encuentra o no puede leerse." << endl;
+return;
     }
 
     listaComandos = ListaComandos();
@@ -124,7 +125,7 @@ void guardar(const string& tipoArchivo, const string& nombreArchivo) {
         	}
 	list<OrganizadorComandos>::const_iterator it;
 	for (it = listaComandos.obtenerLista().begin(); it != listaComandos.obtenerLista().end(); ++it) {
-            if (it->tipo == TIPO_MOVIMIENTO) {
+            if (it->tipo == Tipomovimiento) {
                 archivo << it->movimiento.obtenerTipo()     << " "
                         << it->movimiento.obtenerMagnitud() << " "
                         << it->movimiento.obtenerUnidad()   << endl;
@@ -169,20 +170,17 @@ double x= coordX;
     double angulo = 0.0; 
 list<OrganizadorComandos>::const_iterator itS;
 for (itS = listaComandos.obtenerLista().begin(); itS != listaComandos.obtenerLista().end(); ++itS) {
-        if (itS->tipo == TIPO_MOVIMIENTO) {
+        if (itS->tipo == Tipomovimiento) {
 if (itS->movimiento.obtenerTipo() == "avanzar") {
                 x += itS->movimiento.aMetros() * cos(angulo);
                 y += itS->movimiento.aMetros() * sin(angulo);
             } else {
                 angulo += itS->movimiento.aRadianes();
             }
- } else if (itS->tipo == TIPO_ANALISIS) {
-          cout << "Ejecutando analisis " << itS->analisis.obtenerTipo()
-         << " sobre " << itS->analisis.obtenerObjeto();
-    if (!itS->analisis.obtenerComentario().empty())
-        cout << itS->analisis.obtenerComentario() << endl;
-        }
+ 	} else if (itS->tipo == Tipoanalisis) {
+     
     }
+}
  cout << "La simulacion de los comandos, a partir de la posicion ("
          << coordX << "," << coordY << "), deja al robot en la nueva posicion ("
          << x << "," << y << ")" << endl;

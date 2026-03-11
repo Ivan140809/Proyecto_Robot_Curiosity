@@ -7,20 +7,21 @@
 using namespace std;
 
 enum TipoComando {
-    TIPO_MOVIMIENTO,
-    TIPO_ANALISIS
+    Tipomovimiento,
+    Tipoanalisis
 };
 
+// Funcion asistida con IA claude AI para poder tener un contenedor que aceptara los dos tipos de clases o TADs tanto los comandos de analisis como los de movimientos, estableciendo una estructura contenedora de los elementos y el uso del enum para las constantes, del tipo analisis y del tipo movimiento todo para conservar el orden que llegan los comandos
 struct OrganizadorComandos {
     TipoComando       tipo;
     ComandoMovimiento movimiento;
     ComandoAnalisis   analisis;
 
     OrganizadorComandos(const ComandoMovimiento& mov)
-        : tipo(TIPO_MOVIMIENTO), movimiento(mov) {}
+        : tipo(Tipomovimiento), movimiento(mov) {}
 
     OrganizadorComandos(const ComandoAnalisis& anali)
-        : tipo(TIPO_ANALISIS), analisis(anali) {}
+        : tipo(Tipoanalisis), analisis(anali) {}
 };
 
 class ListaComandos {

@@ -1,7 +1,7 @@
 #include "comandos.h"
 #include "ayuda.h"
 #include "valParam.h"
-#include "comandosE1.h"
+#include "SistemaRobot.h"
 #include <iostream>
 #include <sstream>
 #include <iostream>
