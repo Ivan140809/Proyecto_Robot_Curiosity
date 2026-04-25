@@ -1,13 +1,13 @@
 #include "SistemaRobot.h"
+#include "ArbolKD.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <cmath>
 using namespace std;
-
+ListaElementos listaElementos;
+ArbolKD arbolKD;
 static ListaComandos  listaComandos;
-static ListaElementos listaElementos;
-
 void cargar_comandos(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
@@ -77,35 +77,50 @@ void agregar_analisis(const string& tipo, const string& objeto, const string& co
 
 void cargar_elementos(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
+
     if (!archivo.is_open()) {
-        cout << "Error con el archivo"<<endl;
+        cout << "Error con el archivo" << endl;
+        return;
     }
- listaElementos = ListaElementos();
+
+    listaElementos = ListaElementos();
 
     string linea;
     int cargados = 0;
 
     while (getline(archivo, linea)) {
-  istringstream palabra(linea);
-        string tipo, tamStr, unidad, xStr, yStr;
-      palabra >> tipo >> tamStr >> unidad >> xStr >> yStr;
+        istringstream palabra(linea);
+
+        string tipo, tamStr, unidad, xStr, yStr, extra;
+        palabra >> tipo >> tamStr >> unidad >> xStr >> yStr >> extra;
+
+        if (tipo.empty() || tamStr.empty() || unidad.empty() || xStr.empty() || yStr.empty() || !extra.empty()) {
+            continue;
+        }
+
+        bool tipoValido = (tipo == "roca" || tipo == "crater" || tipo == "monticulo" || tipo == "duna");
+        bool unidadValida = (unidad == "cm" || unidad == "dm" || unidad == "m" || unidad == "km");
+
+        if (!tipoValido || !unidadValida) {
+            continue;
+        }
 
         double tam = strtod(tamStr.c_str(), nullptr);
-        double x   = strtod(xStr.c_str(),   nullptr);
-        double y   = strtod(yStr.c_str(),   nullptr);
+        double x = strtod(xStr.c_str(), nullptr);
+        double y = strtod(yStr.c_str(), nullptr);
 
         listaElementos.agregar(ElementoInteres(tipo, tam, unidad, x, y));
         cargados++;
     }
+
     archivo.close();
 
-if (cargados == 0) {
+    if (cargados == 0) {
         cout << "El archivo " << nombreArchivo << " no contiene elementos." << endl;
     } else {
         cout << cargados << " elementos cargados correctamente desde " << nombreArchivo << endl;
     }
 }
-
 void agregar_elemento(const string& tipo, double tamano, const string& unidad,
                           double coordX, double coordY) {
     listaElementos.agregar(ElementoInteres(tipo, tamano, unidad, coordX, coordY));
@@ -149,11 +164,7 @@ void guardar(const string& tipoArchivo, const string& nombreArchivo) {
 	list<ElementoInteres>::const_iterator itElem;
 	  for (itElem = listaElementos.obtenerLista().begin(); itElem != listaElementos.obtenerLista().end(); ++itElem) {
             Punto pos = itElem->obtenerPosicion();
-            archivo << itElem->obtenerTipo()   
-                    << itElem->obtenerTamano()  
-                    << itElem->obtenerUnidad()  
-                    << pos.obtenerX()           
-                    << pos.obtenerY()<< endl;
+            archivo << itElem->obtenerTipo() << itElem->obtenerTamano()<< itElem->obtenerUnidad()<< pos.obtenerX() << pos.obtenerY()<< endl;
         }
  	archivo.close();
         cout << "La informacion ha sido guardada en " << nombreArchivo << endl;
@@ -167,7 +178,7 @@ void simular_comandos(double coordX, double coordY) {
 
 double x= coordX;
     double y= coordY;
-    double angulo = 0.0; 
+    double angulo = 0.0;
 list<OrganizadorComandos>::const_iterator itS;
 for (itS = listaComandos.obtenerLista().begin(); itS != listaComandos.obtenerLista().end(); ++itS) {
         if (itS->tipo == Tipomovimiento) {
@@ -178,12 +189,35 @@ if (itS->movimiento.obtenerTipo() == "avanzar") {
                 angulo += itS->movimiento.aRadianes();
             }
  	} else if (itS->tipo == Tipoanalisis) {
-     
+     	
     }
 }
  cout << "La simulacion de los comandos, a partir de la posicion ("
          << coordX << "," << coordY << "), deja al robot en la nueva posicion ("
          << x << "," << y << ")" << endl;
 }
+void ubicar_elementos() {
+ if (listaElementos.obtenerLista().empty()) {
+        cout << " La información requerida no está almacenada en memoria." << endl;
+     return;
+    }
+    arbolKD.ubicarElementos(listaElementos);
+}
 
+void en_cuadrante(double coordX1, double coordX2, double coordY1, double coordY2) {
+    if (arbolKD.estaVacio()) {
+        cout << "No hay informacion, Los elementos no han sido ubicados todavía con el comando ubicar_elementos." << endl;
+        return;
+    }
+
+    list<ElementoInteres> encontrados;
+    encontrados = arbolKD.enCuadrante(coordX1, coordX2, coordY1, coordY2);
+
+    cout << " Los elementos ubicados en el cuadrante solicitado son:" << endl;
+    list<ElementoInteres>::iterator it;
+    for (it = encontrados.begin(); it != encontrados.end(); ++it) {
+    Punto pos = it->obtenerPosicion();
+    cout << it->obtenerTipo() << " " << it->obtenerTamano() << " " << it->obtenerUnidad() << " " << pos.obtenerX() << " " << pos.obtenerY() << endl;
+ }
+}
 

@@ -1,8 +1,5 @@
-avanzar 10 m
-avanzar 500 cm
-avanzar 2 km
-avanzar 15 dm
-avanzar 0.5 m
-avanzar 1000 cm
-avanzar 3 km
-avanzar 20 dm
+roca 10 m 1 1
+crater 20 m 5 5
+monticulo 30 m 8 2
+duna 15 m -2 4
+roca 5 m 3 -1

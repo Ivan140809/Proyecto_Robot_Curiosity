@@ -1,4 +1,8 @@
 
+#ifndef VAL_PARAM_H
+#define VAL_PARAM_H
+
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -30,3 +34,5 @@ bool validar_ruta(string params[], int cantidad);
 bool validar_ayuda(string params[], int cantidad);
 
 bool validar_salir(string comando);
+
+#endif

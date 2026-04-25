@@ -30,6 +30,15 @@ void guardar(const string& tipoArchivo, const string& nombreArchivo);
 // simular_comandos coordX coordY
 void simular_comandos(double coordX, double coordY);
 
+
+//correspondiente al TAD sistema de la entrega 2.
+
+//ubicar_elementos
+void ubicar_elementos();
+
+//en_cuadrante coordx1, coordX2, coordY1, coordY2
+void en_cuadrante(double coordX1, double coordX2, double coordY1, double coordY2);
+
 #endif
 
 

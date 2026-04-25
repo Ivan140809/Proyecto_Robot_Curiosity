@@ -7,7 +7,7 @@ ElementoInteres::ElementoInteres(const string& tipo, double tamano, const string
                                  double coordX, double coordY)
     : tipo(tipo), tamano(tamano), unidad(unidad), posicion(Punto(coordX, coordY)) {}
 
-//Gets 
+//gets
 string ElementoInteres::obtenerTipo() const {
     return tipo;
 }
@@ -31,7 +31,15 @@ double ElementoInteres::tamanoEnMetros() const {
     if (unidad == "km")  return tamano * 1000.0;
     return tamano;
 }
-//Sets
+
+bool ElementoInteres::estaEnCuadrante(double xMin, double xMax, double yMin, double yMax) const {
+    double x = this->posicion.obtenerX();
+    double y = this->posicion.obtenerY();
+    return x >= xMin && x <= xMax && y >= yMin && y <= yMax;
+}
+
+
+//sets
 void ElementoInteres::fijarTipo(const string& nuevoTipo) {
     tipo = nuevoTipo;
 }

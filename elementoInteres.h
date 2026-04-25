@@ -11,7 +11,7 @@ private:
 string tipo;     // roca | crater | monticulo | duna
 double tamano;   // valor real positivo
 string unidad;   // cm | dm | m | km
-Punto  posicion; // coordenadas (x, y) en el plano marciano
+Punto  posicion; // coordenadas (x, y) en el plano
 
 public:
     // Constructores
@@ -25,6 +25,7 @@ public:
     string obtenerUnidad()   const;
     Punto  obtenerPosicion() const;
     double tamanoEnMetros()  const;
+bool estaEnCuadrante(double xMin, double xMax, double yMin, double yMax) const;
 
     // Sets
     void fijarTipo(const string& nuevoTipo);
