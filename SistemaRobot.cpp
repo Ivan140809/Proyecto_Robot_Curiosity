@@ -8,7 +8,7 @@ using namespace std;
 ListaElementos listaElementos;
 ArbolKD arbolKD;
 static ListaComandos  listaComandos;
-
+bool elementosUbicados = false;
 void cargar_comandos(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
@@ -121,10 +121,12 @@ void cargar_elementos(const string& nombreArchivo) {
     } else {
         cout << cargados << " elementos cargados correctamente desde " << nombreArchivo << endl;
     }
+   elementosUbicados=false;
 }
 void agregar_elemento(const string& tipo, double tamano, const string& unidad,
                           double coordX, double coordY) {
     listaElementos.agregar(ElementoInteres(tipo, tamano, unidad, coordX, coordY));
+    elementosUbicados=false;
     cout << "El elemento ha sido agregado exitosamente." << endl;
 }
 
@@ -203,10 +205,11 @@ void ubicar_elementos() {
      return;
     }
     arbolKD.ubicarElementos(listaElementos);
+    elementosUbicados=true;
 }
 
 void en_cuadrante(double coordX1, double coordX2, double coordY1, double coordY2) {
-    if (arbolKD.estaVacio()) {
+    if (!elementosUbicados) {
         cout << "No hay informacion, Los elementos no han sido ubicados todavía con el comando ubicar_elementos." << endl;
         return;
     }

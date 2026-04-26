@@ -173,16 +173,7 @@ bool procesador_linea(string& linea) {
         double coordX2 = strtod(x2.c_str(), nullptr);
         double coordY1 = strtod(y1.c_str(), nullptr);
         double coordY2 = strtod(y2.c_str(), nullptr);
-        list<ElementoInteres> encontrados = arbolKD.enCuadrante(coordX1, coordX2, coordY1, coordY2);
-        if (encontrados.empty()) {
-            cout << "No se encontraron elementos en el cuadrante indicado " << endl;
-        } else {
-            cout << "Los elementos ubicados en el cuadrante son:" << endl;
-            list<ElementoInteres>::iterator it;
-            for (it = encontrados.begin(); it != encontrados.end(); ++it) {
-                cout << it->obtenerTipo() << endl;
-            }
-        }
+         en_cuadrante(coordX1, coordX2, coordY1, coordY2);
         return false;
     }
 
