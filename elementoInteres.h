@@ -25,7 +25,7 @@ public:
     string obtenerUnidad()   const;
     Punto  obtenerPosicion() const;
     double tamanoEnMetros()  const;
-bool estaEnCuadrante(double xMin, double xMax, double yMin, double yMax) const;
+    bool estaEnCuadrante(double xMin, double xMax, double yMin, double yMax) const;
 
     // Sets
     void fijarTipo(const string& nuevoTipo);

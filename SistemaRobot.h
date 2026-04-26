@@ -5,7 +5,6 @@
 #include "listaComandos.h"
 #include "listaElementos.h"
 using namespace std;
-
 //correspondiente al TAD sistema de la entrega 1.
 
 //comando cargar_comandos nombre_archivo

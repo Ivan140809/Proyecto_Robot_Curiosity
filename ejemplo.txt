@@ -1,5 +1,0 @@
-roca 10 m 1 1
-crater 20 m 5 5
-monticulo 30 m 8 2
-duna 15 m -2 4
-roca 5 m 3 -1

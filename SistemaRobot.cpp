@@ -8,6 +8,7 @@ using namespace std;
 ListaElementos listaElementos;
 ArbolKD arbolKD;
 static ListaComandos  listaComandos;
+
 void cargar_comandos(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
